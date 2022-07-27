@@ -14,6 +14,9 @@ class mainScene {
         this.score = 0;
         let style = { font: '20px Arial', fill: '#fff' };
         this.scoreText = this.add.text(20, 20, 'score: ' + this.score, style);
+        this.gameOverText = this.add.text(325, 450, 'You\'ve made it!', {font: '50px Arial', fill: '#fff'});
+        this.gameOverText.setOrigin(0.5);
+        this.gameOverText.visible = false;
 
         this.arrow = this.input.keyboard.createCursorKeys();
     }
@@ -42,12 +45,20 @@ class mainScene {
     }
 
     hit() {
+
+        this.score += 10;
+        this.scoreText.setText('score: ' + this.score);
+
+        // winning condition
+        if (this.score >= 100) {
+            this.arrow.enabled = false;
+            this.gameOverText.visible = true;
+            this.scene.pause();
+        }
+
         // Change the position x and y of the coin randomly
         this.coin.x = Phaser.Math.Between(50, 850);
         this.coin.y = Phaser.Math.Between(50, 600);
-      
-        this.score += 10;
-        this.scoreText.setText('score: ' + this.score);
 
         this.tweens.add({
             targets: this.player, // on the player 
@@ -57,7 +68,6 @@ class mainScene {
             yoyo: true, // at the end, go back to original scale 
           });
       }
-
 }
 
 new Phaser.Game({
